@@ -3,9 +3,16 @@ function angle_cmd = acc2angle(acc)
 global roll0
 
 yaw = atan2(acc(2),acc(1));
-pitch = atan2(-1*acc(3),norm(acc(1:2)));
-roll = roll0;
+%pitch = -atan2(norm([acc(2) acc(1)]),-acc(3));
+%pitch = pi + atan2(acc(1),acc(3));
+pitch = -atan2(norm([acc(2) acc(1)]),-acc(3));
+%pitch = atan2(-acc(1),-acc(3));
+% if pitch > 0
+%     pitch = pitch - 2*pi;
+% end
 
-angle_cmd = [yaw pitch roll];
+roll = 0;
+
+angle_cmd = [roll pitch yaw];
 
 end
