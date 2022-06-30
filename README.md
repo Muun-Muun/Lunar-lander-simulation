@@ -14,7 +14,7 @@ We solve trajectory optimization problem using gradient descent convex optimizat
 <p align="center">
   <img src="https://user-images.githubusercontent.com/52774019/176707984-337374f8-72ea-47f7-8311-5c2f4c63dfef.png" />
 </p> 
-*<span style="color:gray">Convexed-optimized trajectory</span>*
+*<span style="color:yellow">Convexed-optimized trajectory</span>*
 
 This plot was generated in Python. If you want to check the python code, go to Choi.J.W's Github. @j9bobotw 
 
