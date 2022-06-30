@@ -30,6 +30,12 @@ To be precise, the attitude should be controlled in the opposite direction of th
 ## 6-dof simulation
 Guidance and Attitude controller were verified through 6dof simulation.
 
+  <img src="https://user-images.githubusercontent.com/52774019/176716171-0bf138fe-0171-4213-9ce8-ce0e8e74b055.png" /><br>
+  Lunar-lander soft landing 6-dof simulation<br></p> 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/52774019/176716297-656b8fd0-d3c2-4c6c-a9d3-a30d90b566b6.png" /><br>
+  states of 6-dof simulation<br></p> 
+
 All this processes were done by MATLAB & Python.
 
 #
