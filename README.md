@@ -7,6 +7,6 @@ Trajectories have been optimized for fuel performance. We solved the convex opti
 
 We designed an attitude control loop to align the lunar-lander in the direction of acceleration calculated from guidance. 
 
-In addition, performance was verified through 6dof simulation.
+Also, performance was verified through 6dof simulation.
 
 All of the above processes were performed in Matlab.
