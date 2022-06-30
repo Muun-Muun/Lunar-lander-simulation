@@ -2,7 +2,7 @@
 
 We design soft-landing system for lunar-lader to achieve trageted point with minimized fuel.
 
-This system is consist of four sections:
+This system is consist of three sections:
 
 >1. Guidance
 >2. Attitude controller
