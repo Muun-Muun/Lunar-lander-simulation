@@ -32,6 +32,7 @@ Guidance and Attitude controller were verified through 6dof simulation.
 
 All this processes were done by MATLAB & Python.
 
----
-Thanks for visiting my Github.
-If you have any questions please e-mail me.  :point_right: yunjung.kim181@gmail.com
+
+Thanks for visiting my Github.<br>
+If you have any questions please e-mail me.  
+:point_right: yunjung.kim181@gmail.com
