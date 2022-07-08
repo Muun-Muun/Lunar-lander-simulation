@@ -1,48 +1,48 @@
 function [X,dX] = UPDATE_DERIV(Moment, acc, state)
-global m Ixx Iyy Izz
-% state = [pos vel ang ang_vel]
-% dstate = [dpos dvel dang dang_vel]
-pos = state(1:3);
-vel = state(4:6);
-ang = state(7:9);
-ang_vel = state(10:12);
+global MOI
+% format:
+%   X (or state) = [position velocity euler_angle angualr_velocity]
+%   dX = [d(position)/dt d(velocity)/dt d(euler_angle)/dt d(angular_velocity)/dt]
 
-% dpos
-% C_n2b = [1 0 0; 0 cos(ang(1)) sin(ang(1)); 0 -sin(ang(1)) cos(ang(1))]...
-%     *[cos(ang(2)) 0 -sin(ang(2)); 0 1 0; sin(ang(2)) 0 cos(ang(2))]...
-%     *[cos(ang(2)) sin(ang(3)) 0; -sin(ang(3)) cos(ang(3)) 0; 0 0 1];   % 3()-2-1
-C_b2n = [cos(ang(2))*cos(ang(3)) cos(ang(2))*sin(ang(3)) -sin(ang(2));...
-    sin(ang(1))*sin(ang(2))-cos(ang(1))*sin(ang(3)) sin(ang(1))*sin(ang(2))*sin(ang(3))+cos(ang(1))*cos(ang(3)) sin(ang(1))*cos(ang(2));...
-    cos(ang(1))*sin(ang(2))*cos(ang(3))+sin(ang(1))*sin(ang(3)) cos(ang(1))*sin(ang(2))*sin(ang(3))-sin(ang(1))*cos(ang(3)) cos(ang(1))*cos(ang(2))]';
+% get states
+vel = state(4:6);       % velocity  
+ang = state(7:9);       % euler angle
+ang_vel = state(10:12); % angular velocity
 
-dpos = C_b2n*vel';
+% calculate derives of states
+dpos = cal_derive_position(ang,vel);
+dvel = cal_derive_velocity(vel,ang,ang_vel,acc);
+dang = cal_derive_euler_angle(ang,ang_vel);
+dang_vel = cal_derive_angular_velocity(Moment,MOI,ang_vel);
 
-% dvel
-P = ang_vel(1);
-Q = ang_vel(2);
-R = ang_vel(3);
-U = vel(1);
-V = vel(2);
-W = vel(3);
-
-%Thrust = C_b2n'*acc';  % acc = [ax ay az]', b-frame
-Thrust = [0 0 -norm(acc)]';  
-g = C_b2n'*[0 0 1.63]';
-Weight = g;
-
-dvel = -[Q*W-R*V;R*U-P*W;P*V-Q*U] + Thrust + Weight;
-
-% dang
-dang = [1 sin(ang(1))*tan(ang(2)) cos(ang(1))*tan(ang(2));...
-    0 cos(ang(1)) -sin(ang(1));...
-    0 sin(ang(1))*sec(ang(2)) cos(ang(1))*sec(ang(2))]*ang_vel';
-
-% dang_vel
-I = [Ixx 0 0; 0 Iyy 0; 0 0 Izz];
-dang_vel = inv(I)*[Moment(1) + (Iyy-Izz)*Q*R; Moment(2) + (Izz-Ixx)*R*P;...
-    Moment(3) + (Ixx-Iyy)*P*Q];
-
+% states and derives of states
 X = state;
 dX = [dpos' dvel' dang' dang_vel'];
 
+%% Sub Functions
+    % claculate derive of position
+    function dpos = cal_derive_position(ang,vel)
+        dpos = DCM_b2n(ang)*vel';
+    end
+    % calculate derive of Euler angle
+    function dang = cal_derive_euler_angle(ang,angular_velocity)
+        dang = [1 sin(ang(1))*tan(ang(2)) cos(ang(1))*tan(ang(2));...
+            0 cos(ang(1)) -sin(ang(1));...
+            0 sin(ang(1))*sec(ang(2)) cos(ang(1))*sec(ang(2))]*angular_velocity';
+    end
+
+    % claculate derive of velocity
+    function dvel = cal_derive_velocity(vel,ang,ang_vel,acc)
+        Thrust = [0 0 -norm(acc)]';  
+        Gravity = DCM_b2n(ang)'*[0 0 1.63]';
+        dvel = -cross(ang_vel,vel)' + Thrust + Gravity;
+    end
+
+    % claculate derive of velocity
+    function dang_vel = cal_derive_angular_velocity(Moment,MOI,ang_vel)
+        ang_moment = MOI*ang_vel';
+        dang_vel = MOI\(Moment' - cross(ang_vel,ang_moment)');
+    end
+
 end
+
